@@ -147,10 +147,7 @@ async fn run(path: PathBuf) -> Result<()> {
             );
         }
     } else if path.is_dir() {
-        let project = find_kicad_project(
-            std::env::current_dir().wrap_err("Unable to get current directory")?,
-        )
-        .await?;
+        let project = find_kicad_project(path).await?;
         exec_kicad([project])
     } else {
         bail!("Not a kicad project file or directory: {}", path.display());
