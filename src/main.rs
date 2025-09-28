@@ -1,7 +1,6 @@
 use std::{
-    os::unix::process::CommandExt,
     path::PathBuf,
-    process::Command,
+    process::{Command, Stdio},
     sync::{
         Mutex,
         atomic::{AtomicBool, Ordering},
@@ -112,8 +111,13 @@ async fn find_kicad_project(path: PathBuf) -> Result<PathBuf, Error> {
 }
 
 fn exec_kicad<const N: usize>(args: [PathBuf; N]) -> Result<()> {
-    let e = Command::new("kicad").args(args).exec();
-    Err(e.into())
+    Command::new("kicad")
+        .args(args)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()?;
+    Ok(())
 }
 
 fn clap_v3_styling() -> Styles {
